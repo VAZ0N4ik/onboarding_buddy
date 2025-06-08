@@ -166,7 +166,7 @@ def format_user_info(user_data: Dict[str, Any]) -> str:
     username_str = f"@{username}" if username else "Не указан"
 
     return f"""
-👤 **Пользователь {user_id}**
+👤 Пользователь {user_id}
 📝 Имя: {full_name}
 🏷️ Username: {username_str}
 📊 Статус: {status}
@@ -221,7 +221,7 @@ def format_statistics(stats: Dict[str, Any]) -> str:
     activity = active_week / total_users * 100 if total_users > 0 else 0
 
     return f"""
-📊 **Статистика OnboardingBuddy**
+📊 Статистика OnboardingBuddy
 
 👥 Всего пользователей: {total_users}
 🔥 Активных за неделю: {active_week}
@@ -306,7 +306,7 @@ def create_status_emoji_map() -> Dict[str, str]:
     }
 
 
-def format_callback_data(action: str, **kwargs) -> str:
+def format_callback_data(action: str, kwargs) -> str:
     """Форматирование callback_data с параметрами"""
     if not kwargs:
         return action

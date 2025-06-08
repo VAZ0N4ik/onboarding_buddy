@@ -106,12 +106,12 @@ async def show_users_page(query, context, page: int):
     end_idx = start_idx + users_per_page
     page_users = all_users[start_idx:end_idx]
 
-    text = f"👥 **Пользователи (страница {page}/{total_pages}):**\n\n"
+    text = f"👥 Пользователи (страница {page}/{total_pages}):\n\n"
 
     for user in page_users:
         status_emoji = user.status_emoji
         username = f"@{user.username}" if user.username else "Нет username"
-        text += f"{status_emoji} **{user.full_name}** ({username})\n"
+        text += f"{status_emoji} {user.full_name} ({username})\n"
         text += f"   └ {user.status_name}, этап {user.stage}/10\n\n"
 
     # Создаем клавиатуру пагинации
@@ -135,11 +135,11 @@ async def show_feedback_page(query, context, page: int):
     end_idx = start_idx + feedback_per_page
     page_feedback = all_feedback[start_idx:end_idx]
 
-    text = f"💬 **Обратная связь (страница {page}/{total_pages}):**\n\n"
+    text = f"💬 Обратная связь (страница {page}/{total_pages}):\n\n"
 
     for feedback in page_feedback:
         username = f"@{feedback['username']}" if feedback['username'] else "Нет username"
-        text += f"👤 **{feedback['user_name']}** ({username})\n"
+        text += f"👤 {feedback['user_name']} ({username})\n"
         text += f"📅 {feedback['created_at'][:16]}\n"
         text += f"💬 {feedback['message']}\n\n"
         text += "─" * 30 + "\n\n"
@@ -164,7 +164,7 @@ def parse_callback_action(callback_data: str) -> tuple:
     return callback_data, {}
 
 
-def create_callback_data(action: str, **params) -> str:
+def create_callback_data(action: str, params) -> str:
     """Создание callback_data с параметрами"""
     if not params:
         return action
@@ -239,21 +239,21 @@ async def show_user_details(query, context, user_id: int):
     actions = db_manager.get_user_actions(user_id, limit=10)
 
     text = f"""
-👤 **Детали пользователя**
+👤 Детали пользователя
 
-**Основная информация:**
-• **ID:** {user.user_id}
-• **Имя:** {user.full_name or 'Не указано'}
-• **Username:** @{user.username or 'Не указан'}
-• **Должность:** {user.position or 'Не указана'}
+Основная информация:
+• ID: {user.user_id}
+• Имя: {user.full_name or 'Не указано'}
+• Username: @{user.username or 'Не указан'}
+• Должность: {user.position or 'Не указана'}
 
-**Прогресс:**
-• **Статус:** {user.status_emoji} {user.status_name}
-• **Этап:** {user.stage}/10 ({user.progress_percentage:.0f}%)
-• **Дата регистрации:** {user.created_at.strftime('%d.%m.%Y %H:%M') if user.created_at else 'Неизвестно'}
-• **Последнее обновление:** {user.updated_at.strftime('%d.%m.%Y %H:%M') if user.updated_at else 'Неизвестно'}
+Прогресс:
+• Статус: {user.status_emoji} {user.status_name}
+• Этап: {user.stage}/10 ({user.progress_percentage:.0f}%)
+• Дата регистрации: {user.created_at.strftime('%d.%m.%Y %H:%M') if user.created_at else 'Неизвестно'}
+• Последнее обновление: {user.updated_at.strftime('%d.%m.%Y %H:%M') if user.updated_at else 'Неизвестно'}
 
-**Последние действия:**
+Последние действия:
 """
 
     for action in actions[:5]:
@@ -274,9 +274,9 @@ async def initiate_user_message(query, context, user_id: int):
         return
 
     text = f"""
-📧 **Отправка сообщения пользователю**
+📧 Отправка сообщения пользователю
 
-👤 **Получатель:** {user.full_name} (@{user.username or 'нет'})
+👤 Получатель: {user.full_name} (@{user.username or 'нет'})
 
 Напишите сообщение, которое хотите отправить этому пользователю.
 Следующее ваше сообщение будет переслано ему.
@@ -300,13 +300,13 @@ async def confirm_reset_progress(query, context, user_id: int):
         return
 
     text = f"""
-⚠️ **Подтверждение сброса прогресса**
+⚠️ Подтверждение сброса прогресса
 
-👤 **Пользователь:** {user.full_name}
-📊 **Текущий прогресс:** {user.stage}/10 этапов
-🎯 **Статус:** {user.status_name}
+👤 Пользователь: {user.full_name}
+📊 Текущий прогресс: {user.stage}/10 этапов
+🎯 Статус: {user.status_name}
 
-**Действие:** Прогресс будет сброшен до начального состояния.
+Действие: Прогресс будет сброшен до начального состояния.
 
 Вы уверены?
 """
@@ -330,18 +330,18 @@ async def confirm_delete_user(query, context, user_id: int):
         return
 
     text = f"""
-🚨 **ВНИМАНИЕ: Удаление пользователя**
+🚨 ВНИМАНИЕ: Удаление пользователя
 
-👤 **Пользователь:** {user.full_name}
-📊 **Прогресс:** {user.stage}/10 этапов
+👤 Пользователь: {user.full_name}
+📊 Прогресс: {user.stage}/10 этапов
 
-**⚠️ ПРЕДУПРЕЖДЕНИЕ:**
+⚠️ ПРЕДУПРЕЖДЕНИЕ:
 Это действие удалит ВСЕ данные пользователя:
 • Профиль и прогресс
 • Историю действий
 • Обратную связь
 
-**Это действие НЕОБРАТИМО!**
+Это действие НЕОБРАТИМО!
 
 Вы действительно хотите удалить пользователя?
 """
